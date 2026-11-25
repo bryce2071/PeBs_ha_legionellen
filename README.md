@@ -1,5 +1,7 @@
 # Legionellen-Aufheizung für Home Assistant
 
+[![Prüfen](https://github.com/bryce2071/PeBs_ha_legionellen/actions/workflows/validate.yml/badge.svg)](https://github.com/bryce2071/PeBs_ha_legionellen/actions/workflows/validate.yml)
+
 Eigene Integration mit Einrichtungsseiten: Sie heizt den Warmwasserspeicher einer
 Wärmepumpe regelmäßig auf 60 °C auf – bevorzugt mit PV-Überschuss, spätestens
 nach einer Woche notfalls mit Netzstrom – und stellt die Warmwasser-Sollwerte
