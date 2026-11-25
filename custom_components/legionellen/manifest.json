@@ -1,0 +1,14 @@
+{
+  "domain": "legionellen",
+  "name": "Legionellen-Aufheizung",
+  "after_dependencies": ["logbook", "recorder"],
+  "codeowners": ["@bryce2071"],
+  "config_flow": true,
+  "dependencies": [],
+  "documentation": "https://github.com/bryce2071/PeBs_ha_legionellen",
+  "integration_type": "service",
+  "iot_class": "calculated",
+  "issue_tracker": "https://github.com/bryce2071/PeBs_ha_legionellen/issues",
+  "requirements": [],
+  "version": "1.0.0"
+}

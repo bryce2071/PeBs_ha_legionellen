@@ -1,0 +1,276 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Wärmepumpe und Speicher",
+        "description": "Zum Aufheizen setzt die Integration die Warmwasser-Sollwerte kurz auf die Zieltemperatur und stellt sie danach auf die alten Werte zurück.",
+        "data": {
+          "name": "Name",
+          "temperatur": "Speichertemperatur",
+          "sollwerte": "Warmwasser-Sollwerte",
+          "heizt": "Wärmepumpe heizt Warmwasser",
+          "sperren": "Nicht starten, solange eingeschaltet",
+          "ziel": "Zieltemperatur",
+          "erfolg_ab": "Geschafft ab",
+          "max_dauer": "Höchstdauer"
+        },
+        "data_description": {
+          "name": "Name des Geräts in Home Assistant.",
+          "temperatur": "Gemessene Temperatur im Warmwasserspeicher.",
+          "sollwerte": "Alle Sollwerte, nach denen die Wärmepumpe Warmwasser bereitet, z. B. Komfort und Eco.",
+          "heizt": "Optional. Binärsensor, der an ist, solange die Wärmepumpe Warmwasser bereitet. Damit erkennt die Integration, ob das Aufheizen startet oder abbricht, und unterscheidet Zapfen von Heizen.",
+          "sperren": "Optional, z. B. EVU-Sperre oder ein eigenes Nachheiz-Skript. Solange eine davon an ist, startet keine automatische Aufheizung.",
+          "ziel": "Auf diese Temperatur wird aufgeheizt. Empfohlen sind 60 °C.",
+          "erfolg_ab": "Ab dieser gemessenen Speichertemperatur gilt die Aufheizung als geschafft.",
+          "max_dauer": "Ist die Temperatur bis dahin nicht erreicht, bricht die Integration ab und stellt die Sollwerte zurück."
+        }
+      },
+      "pv": {
+        "title": "Photovoltaik und Hausakku",
+        "description": "Optional. Ohne PV-Angaben heizt die Integration nur zur Pflicht-Uhrzeit auf.",
+        "data": {
+          "pv": "PV-Leistung",
+          "pv_ab": "Überschuss ab PV-Leistung",
+          "akku": "Akku-Ladestand",
+          "akku_ab": "Überschuss ab Ladestand",
+          "pv_dauer": "Mindestdauer",
+          "pv_von": "PV-Zeitfenster ab",
+          "pv_bis": "PV-Zeitfenster bis"
+        },
+        "data_description": {
+          "pv": "Ein oder mehrere Leistungssensoren der PV-Anlage. Sie werden addiert; W und kW werden erkannt.",
+          "pv_ab": "Ab dieser PV-Leistung gibt es Überschuss.",
+          "akku": "Ladestand des Hausakkus. Ohne Angabe zählt nur die PV-Leistung.",
+          "akku_ab": "Überschuss erst, wenn der Akku mindestens so voll ist.",
+          "pv_dauer": "So viele Minuten müssen die Bedingungen ohne Unterbrechung erfüllt sein.",
+          "pv_von": "Nur in diesem Zeitfenster wird mit PV-Überschuss aufgeheizt.",
+          "pv_bis": "Ende des PV-Zeitfensters."
+        }
+      },
+      "zeitplan": {
+        "title": "Zeitplan und Benachrichtigung",
+        "data": {
+          "pv_ab_tag": "Mit PV-Überschuss ab Tag",
+          "spaetestens_tag": "Spätestens an Tag",
+          "pflicht_uhrzeit": "Uhrzeit der Pflicht-Aufheizung",
+          "stillstand_tage": "Stillstand ab Tagen ohne Zapfen",
+          "zapf_schwelle": "Zapfen erkannt ab Temperaturabfall",
+          "benachrichtigen": "Benachrichtigen über"
+        },
+        "data_description": {
+          "pv_ab_tag": "So viele Tage nach der letzten Aufheizung darf mit PV-Überschuss erneut aufgeheizt werden.",
+          "spaetestens_tag": "Ist bis zu diesem Tag nichts passiert, wird zur Pflicht-Uhrzeit aufgeheizt, notfalls mit Netzstrom. 7 = einmal pro Woche.",
+          "pflicht_uhrzeit": "Ist zu dieser Uhrzeit eine Sperre aktiv, startet die Pflicht-Aufheizung bis zu 6 Stunden später.",
+          "stillstand_tage": "Wurde so lange kein Warmwasser gezapft, wird schon vorher aufgeheizt (bevorzugt mit PV). 0 schaltet das aus.",
+          "zapf_schwelle": "Fällt die Speichertemperatur innerhalb von 15 Minuten um so viel, während die Wärmepumpe nicht heizt, zählt das als Zapfen.",
+          "benachrichtigen": "Optional. Meldung nach jeder Aufheizung, z. B. aufs Handy über die Home Assistant App."
+        }
+      }
+    },
+    "error": {
+      "keine_sollwerte": "Bitte mindestens einen Warmwasser-Sollwert auswählen.",
+      "erfolg_ueber_ziel": "„Geschafft ab“ darf nicht höher sein als die Zieltemperatur.",
+      "ziel_zu_hoch": "{entitaet} lässt höchstens {maximum} °C zu.",
+      "schon_verwendet": "Für diesen Temperatursensor gibt es schon eine Legionellen-Aufheizung.",
+      "pv_fenster": "Das Ende des PV-Zeitfensters muss nach dem Beginn liegen.",
+      "pv_nach_pflicht": "„Mit PV-Überschuss ab Tag“ darf nicht größer sein als „Spätestens an Tag“."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Wärmepumpe und Speicher",
+        "description": "Beim Speichern wird eine laufende Aufheizung abgebrochen und die Sollwerte werden zurückgestellt.",
+        "data": {
+          "temperatur": "Speichertemperatur",
+          "sollwerte": "Warmwasser-Sollwerte",
+          "heizt": "Wärmepumpe heizt Warmwasser",
+          "sperren": "Nicht starten, solange eingeschaltet",
+          "ziel": "Zieltemperatur",
+          "erfolg_ab": "Geschafft ab",
+          "max_dauer": "Höchstdauer"
+        },
+        "data_description": {
+          "temperatur": "Gemessene Temperatur im Warmwasserspeicher.",
+          "sollwerte": "Alle Sollwerte, nach denen die Wärmepumpe Warmwasser bereitet, z. B. Komfort und Eco.",
+          "heizt": "Optional. Binärsensor, der an ist, solange die Wärmepumpe Warmwasser bereitet. Damit erkennt die Integration, ob das Aufheizen startet oder abbricht, und unterscheidet Zapfen von Heizen.",
+          "sperren": "Optional, z. B. EVU-Sperre oder ein eigenes Nachheiz-Skript. Solange eine davon an ist, startet keine automatische Aufheizung.",
+          "ziel": "Auf diese Temperatur wird aufgeheizt. Empfohlen sind 60 °C.",
+          "erfolg_ab": "Ab dieser gemessenen Speichertemperatur gilt die Aufheizung als geschafft.",
+          "max_dauer": "Ist die Temperatur bis dahin nicht erreicht, bricht die Integration ab und stellt die Sollwerte zurück."
+        }
+      },
+      "pv": {
+        "title": "Photovoltaik und Hausakku",
+        "description": "Optional. Ohne PV-Angaben heizt die Integration nur zur Pflicht-Uhrzeit auf.",
+        "data": {
+          "pv": "PV-Leistung",
+          "pv_ab": "Überschuss ab PV-Leistung",
+          "akku": "Akku-Ladestand",
+          "akku_ab": "Überschuss ab Ladestand",
+          "pv_dauer": "Mindestdauer",
+          "pv_von": "PV-Zeitfenster ab",
+          "pv_bis": "PV-Zeitfenster bis"
+        },
+        "data_description": {
+          "pv": "Ein oder mehrere Leistungssensoren der PV-Anlage. Sie werden addiert; W und kW werden erkannt.",
+          "pv_ab": "Ab dieser PV-Leistung gibt es Überschuss.",
+          "akku": "Ladestand des Hausakkus. Ohne Angabe zählt nur die PV-Leistung.",
+          "akku_ab": "Überschuss erst, wenn der Akku mindestens so voll ist.",
+          "pv_dauer": "So viele Minuten müssen die Bedingungen ohne Unterbrechung erfüllt sein.",
+          "pv_von": "Nur in diesem Zeitfenster wird mit PV-Überschuss aufgeheizt.",
+          "pv_bis": "Ende des PV-Zeitfensters."
+        }
+      },
+      "zeitplan": {
+        "title": "Zeitplan und Benachrichtigung",
+        "data": {
+          "pv_ab_tag": "Mit PV-Überschuss ab Tag",
+          "spaetestens_tag": "Spätestens an Tag",
+          "pflicht_uhrzeit": "Uhrzeit der Pflicht-Aufheizung",
+          "stillstand_tage": "Stillstand ab Tagen ohne Zapfen",
+          "zapf_schwelle": "Zapfen erkannt ab Temperaturabfall",
+          "benachrichtigen": "Benachrichtigen über"
+        },
+        "data_description": {
+          "pv_ab_tag": "So viele Tage nach der letzten Aufheizung darf mit PV-Überschuss erneut aufgeheizt werden.",
+          "spaetestens_tag": "Ist bis zu diesem Tag nichts passiert, wird zur Pflicht-Uhrzeit aufgeheizt, notfalls mit Netzstrom. 7 = einmal pro Woche.",
+          "pflicht_uhrzeit": "Ist zu dieser Uhrzeit eine Sperre aktiv, startet die Pflicht-Aufheizung bis zu 6 Stunden später.",
+          "stillstand_tage": "Wurde so lange kein Warmwasser gezapft, wird schon vorher aufgeheizt (bevorzugt mit PV). 0 schaltet das aus.",
+          "zapf_schwelle": "Fällt die Speichertemperatur innerhalb von 15 Minuten um so viel, während die Wärmepumpe nicht heizt, zählt das als Zapfen.",
+          "benachrichtigen": "Optional. Meldung nach jeder Aufheizung, z. B. aufs Handy über die Home Assistant App."
+        }
+      }
+    },
+    "error": {
+      "keine_sollwerte": "Bitte mindestens einen Warmwasser-Sollwert auswählen.",
+      "erfolg_ueber_ziel": "„Geschafft ab“ darf nicht höher sein als die Zieltemperatur.",
+      "ziel_zu_hoch": "{entitaet} lässt höchstens {maximum} °C zu.",
+      "schon_verwendet": "Für diesen Temperatursensor gibt es schon eine Legionellen-Aufheizung.",
+      "pv_fenster": "Das Ende des PV-Zeitfensters muss nach dem Beginn liegen.",
+      "pv_nach_pflicht": "„Mit PV-Überschuss ab Tag“ darf nicht größer sein als „Spätestens an Tag“."
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "laeuft": {
+        "name": "Aufheizung läuft"
+      },
+      "pv_ueberschuss": {
+        "name": "PV-Überschuss"
+      }
+    },
+    "button": {
+      "jetzt_aufheizen": {
+        "name": "Jetzt aufheizen"
+      },
+      "abbrechen": {
+        "name": "Aufheizung abbrechen"
+      }
+    },
+    "sensor": {
+      "status": {
+        "name": "Status",
+        "state": {
+          "heizt": "Heizt auf",
+          "stoerung": "Störung",
+          "aus": "Automatik aus",
+          "faellig": "Fällig",
+          "pv_bereit": "Wartet auf PV-Überschuss",
+          "ok": "Nicht fällig"
+        },
+        "state_attributes": {
+          "stillstand": {
+            "name": "Stillstand"
+          },
+          "grund": {
+            "name": "Grund"
+          },
+          "gestartet": {
+            "name": "Gestartet"
+          },
+          "hoechste_temperatur": {
+            "name": "Höchste Temperatur"
+          },
+          "nicht_verfuegbar": {
+            "name": "Nicht verfügbar"
+          },
+          "pv_moeglich_ab": {
+            "name": "PV-Aufheizung möglich ab"
+          },
+          "pause_bis": {
+            "name": "Pause bis"
+          }
+        }
+      },
+      "letzte_aufheizung": {
+        "name": "Letzte Aufheizung"
+      },
+      "tage_seit_aufheizung": {
+        "name": "Tage seit Aufheizung"
+      },
+      "letzte_zapfung": {
+        "name": "Letzte Zapfung"
+      },
+      "tage_ohne_zapfung": {
+        "name": "Tage ohne Zapfung"
+      },
+      "naechste_pflicht": {
+        "name": "Spätestens nächste Aufheizung"
+      },
+      "letzter_versuch": {
+        "name": "Letzter Versuch",
+        "state": {
+          "erfolgreich": "Erfolgreich",
+          "nicht_gestartet": "Wärmepumpe nicht gestartet",
+          "nicht_erreicht": "Temperatur nicht erreicht",
+          "zeitlimit": "Zeitlimit überschritten",
+          "abgebrochen": "Abgebrochen",
+          "fehler": "Fehler"
+        },
+        "state_attributes": {
+          "start": {
+            "name": "Start"
+          },
+          "ende": {
+            "name": "Ende"
+          },
+          "ausloeser": {
+            "name": "Auslöser"
+          },
+          "grund": {
+            "name": "Grund"
+          },
+          "dauer_minuten": {
+            "name": "Dauer (Minuten)"
+          },
+          "hoechste_temperatur": {
+            "name": "Höchste Temperatur"
+          },
+          "fehler": {
+            "name": "Fehler"
+          }
+        }
+      }
+    },
+    "switch": {
+      "automatik": {
+        "name": "Automatik"
+      }
+    }
+  },
+  "exceptions": {
+    "laeuft_bereits": {
+      "message": "Es läuft bereits eine Aufheizung."
+    },
+    "laeuft_nicht": {
+      "message": "Es läuft gerade keine Aufheizung."
+    },
+    "nicht_verfuegbar": {
+      "message": "Aufheizen nicht möglich: {entitaet} ist nicht verfügbar."
+    },
+    "wiederherstellung": {
+      "message": "Die Sollwerte der letzten Aufheizung werden gerade zurückgestellt. Bitte gleich noch einmal versuchen."
+    }
+  }
+}

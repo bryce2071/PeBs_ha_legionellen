@@ -1,0 +1,276 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Heat pump and storage tank",
+        "description": "To heat up, the integration briefly sets the hot water setpoints to the target temperature and restores the previous values afterwards.",
+        "data": {
+          "name": "Name",
+          "temperatur": "Tank temperature",
+          "sollwerte": "Hot water setpoints",
+          "heizt": "Heat pump heating hot water",
+          "sperren": "Don't start while on",
+          "ziel": "Target temperature",
+          "erfolg_ab": "Done from",
+          "max_dauer": "Maximum duration"
+        },
+        "data_description": {
+          "name": "Device name in Home Assistant.",
+          "temperatur": "Measured temperature in the hot water tank.",
+          "sollwerte": "All setpoints the heat pump uses for hot water, e.g. comfort and eco.",
+          "heizt": "Optional. Binary sensor that is on while the heat pump heats hot water. Used to detect whether heating starts or stops, and to tell hot water draws from heating.",
+          "sperren": "Optional, e.g. utility lock or your own reheat script. While one of them is on, no automatic heat-up starts.",
+          "ziel": "Temperature to heat up to. 60 °C is recommended.",
+          "erfolg_ab": "From this measured tank temperature the heat-up counts as done.",
+          "max_dauer": "If the temperature is not reached by then, the integration stops and restores the setpoints."
+        }
+      },
+      "pv": {
+        "title": "Solar power and home battery",
+        "description": "Optional. Without solar data, the integration only heats up at the duty time.",
+        "data": {
+          "pv": "Solar power",
+          "pv_ab": "Surplus from solar power",
+          "akku": "Battery level",
+          "akku_ab": "Surplus from battery level",
+          "pv_dauer": "Minimum duration",
+          "pv_von": "Solar time window from",
+          "pv_bis": "Solar time window until"
+        },
+        "data_description": {
+          "pv": "One or more power sensors of the solar system. They are added up; W and kW are detected.",
+          "pv_ab": "From this solar power on there is a surplus.",
+          "akku": "Home battery level. Without it, only solar power counts.",
+          "akku_ab": "Surplus only once the battery is at least this full.",
+          "pv_dauer": "The conditions must be met for this many minutes without interruption.",
+          "pv_von": "Heating up with solar surplus only happens in this time window.",
+          "pv_bis": "End of the solar time window."
+        }
+      },
+      "zeitplan": {
+        "title": "Schedule and notification",
+        "data": {
+          "pv_ab_tag": "With solar surplus from day",
+          "spaetestens_tag": "At the latest on day",
+          "pflicht_uhrzeit": "Duty heat-up time",
+          "stillstand_tage": "Stagnation after days without draw",
+          "zapf_schwelle": "Draw detected from temperature drop",
+          "benachrichtigen": "Notify via"
+        },
+        "data_description": {
+          "pv_ab_tag": "This many days after the last heat-up, solar surplus may be used to heat up again.",
+          "spaetestens_tag": "If nothing has happened by this day, the tank is heated at the duty time, using grid power if needed. 7 = once a week.",
+          "pflicht_uhrzeit": "If a lock is active at this time, the duty heat-up starts up to 6 hours later.",
+          "stillstand_tage": "If no hot water has been drawn for this long, the tank is heated earlier (preferably with solar). 0 turns this off.",
+          "zapf_schwelle": "If the tank temperature drops by this much within 15 minutes while the heat pump is not heating, it counts as a draw.",
+          "benachrichtigen": "Optional. Message after every heat-up, e.g. to your phone via the Home Assistant app."
+        }
+      }
+    },
+    "error": {
+      "keine_sollwerte": "Please select at least one hot water setpoint.",
+      "erfolg_ueber_ziel": "\"Done from\" must not be higher than the target temperature.",
+      "ziel_zu_hoch": "{entitaet} allows at most {maximum} °C.",
+      "schon_verwendet": "There already is a legionella heat-up for this temperature sensor.",
+      "pv_fenster": "The end of the solar time window must be after its start.",
+      "pv_nach_pflicht": "\"With solar surplus from day\" must not be greater than \"At the latest on day\"."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Heat pump and storage tank",
+        "description": "Saving cancels a running heat-up and restores the setpoints.",
+        "data": {
+          "temperatur": "Tank temperature",
+          "sollwerte": "Hot water setpoints",
+          "heizt": "Heat pump heating hot water",
+          "sperren": "Don't start while on",
+          "ziel": "Target temperature",
+          "erfolg_ab": "Done from",
+          "max_dauer": "Maximum duration"
+        },
+        "data_description": {
+          "temperatur": "Measured temperature in the hot water tank.",
+          "sollwerte": "All setpoints the heat pump uses for hot water, e.g. comfort and eco.",
+          "heizt": "Optional. Binary sensor that is on while the heat pump heats hot water. Used to detect whether heating starts or stops, and to tell hot water draws from heating.",
+          "sperren": "Optional, e.g. utility lock or your own reheat script. While one of them is on, no automatic heat-up starts.",
+          "ziel": "Temperature to heat up to. 60 °C is recommended.",
+          "erfolg_ab": "From this measured tank temperature the heat-up counts as done.",
+          "max_dauer": "If the temperature is not reached by then, the integration stops and restores the setpoints."
+        }
+      },
+      "pv": {
+        "title": "Solar power and home battery",
+        "description": "Optional. Without solar data, the integration only heats up at the duty time.",
+        "data": {
+          "pv": "Solar power",
+          "pv_ab": "Surplus from solar power",
+          "akku": "Battery level",
+          "akku_ab": "Surplus from battery level",
+          "pv_dauer": "Minimum duration",
+          "pv_von": "Solar time window from",
+          "pv_bis": "Solar time window until"
+        },
+        "data_description": {
+          "pv": "One or more power sensors of the solar system. They are added up; W and kW are detected.",
+          "pv_ab": "From this solar power on there is a surplus.",
+          "akku": "Home battery level. Without it, only solar power counts.",
+          "akku_ab": "Surplus only once the battery is at least this full.",
+          "pv_dauer": "The conditions must be met for this many minutes without interruption.",
+          "pv_von": "Heating up with solar surplus only happens in this time window.",
+          "pv_bis": "End of the solar time window."
+        }
+      },
+      "zeitplan": {
+        "title": "Schedule and notification",
+        "data": {
+          "pv_ab_tag": "With solar surplus from day",
+          "spaetestens_tag": "At the latest on day",
+          "pflicht_uhrzeit": "Duty heat-up time",
+          "stillstand_tage": "Stagnation after days without draw",
+          "zapf_schwelle": "Draw detected from temperature drop",
+          "benachrichtigen": "Notify via"
+        },
+        "data_description": {
+          "pv_ab_tag": "This many days after the last heat-up, solar surplus may be used to heat up again.",
+          "spaetestens_tag": "If nothing has happened by this day, the tank is heated at the duty time, using grid power if needed. 7 = once a week.",
+          "pflicht_uhrzeit": "If a lock is active at this time, the duty heat-up starts up to 6 hours later.",
+          "stillstand_tage": "If no hot water has been drawn for this long, the tank is heated earlier (preferably with solar). 0 turns this off.",
+          "zapf_schwelle": "If the tank temperature drops by this much within 15 minutes while the heat pump is not heating, it counts as a draw.",
+          "benachrichtigen": "Optional. Message after every heat-up, e.g. to your phone via the Home Assistant app."
+        }
+      }
+    },
+    "error": {
+      "keine_sollwerte": "Please select at least one hot water setpoint.",
+      "erfolg_ueber_ziel": "\"Done from\" must not be higher than the target temperature.",
+      "ziel_zu_hoch": "{entitaet} allows at most {maximum} °C.",
+      "schon_verwendet": "There already is a legionella heat-up for this temperature sensor.",
+      "pv_fenster": "The end of the solar time window must be after its start.",
+      "pv_nach_pflicht": "\"With solar surplus from day\" must not be greater than \"At the latest on day\"."
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "laeuft": {
+        "name": "Heat-up running"
+      },
+      "pv_ueberschuss": {
+        "name": "Solar surplus"
+      }
+    },
+    "button": {
+      "jetzt_aufheizen": {
+        "name": "Heat up now"
+      },
+      "abbrechen": {
+        "name": "Cancel heat-up"
+      }
+    },
+    "sensor": {
+      "status": {
+        "name": "Status",
+        "state": {
+          "heizt": "Heating up",
+          "stoerung": "Fault",
+          "aus": "Automatic off",
+          "faellig": "Due",
+          "pv_bereit": "Waiting for solar surplus",
+          "ok": "Not due"
+        },
+        "state_attributes": {
+          "stillstand": {
+            "name": "Stagnation"
+          },
+          "grund": {
+            "name": "Reason"
+          },
+          "gestartet": {
+            "name": "Started"
+          },
+          "hoechste_temperatur": {
+            "name": "Highest temperature"
+          },
+          "nicht_verfuegbar": {
+            "name": "Unavailable"
+          },
+          "pv_moeglich_ab": {
+            "name": "Solar heat-up possible from"
+          },
+          "pause_bis": {
+            "name": "Paused until"
+          }
+        }
+      },
+      "letzte_aufheizung": {
+        "name": "Last heat-up"
+      },
+      "tage_seit_aufheizung": {
+        "name": "Days since heat-up"
+      },
+      "letzte_zapfung": {
+        "name": "Last draw"
+      },
+      "tage_ohne_zapfung": {
+        "name": "Days without draw"
+      },
+      "naechste_pflicht": {
+        "name": "Next heat-up at the latest"
+      },
+      "letzter_versuch": {
+        "name": "Last attempt",
+        "state": {
+          "erfolgreich": "Successful",
+          "nicht_gestartet": "Heat pump did not start",
+          "nicht_erreicht": "Temperature not reached",
+          "zeitlimit": "Time limit exceeded",
+          "abgebrochen": "Cancelled",
+          "fehler": "Error"
+        },
+        "state_attributes": {
+          "start": {
+            "name": "Start"
+          },
+          "ende": {
+            "name": "End"
+          },
+          "ausloeser": {
+            "name": "Trigger"
+          },
+          "grund": {
+            "name": "Reason"
+          },
+          "dauer_minuten": {
+            "name": "Duration (minutes)"
+          },
+          "hoechste_temperatur": {
+            "name": "Highest temperature"
+          },
+          "fehler": {
+            "name": "Error"
+          }
+        }
+      }
+    },
+    "switch": {
+      "automatik": {
+        "name": "Automatic"
+      }
+    }
+  },
+  "exceptions": {
+    "laeuft_bereits": {
+      "message": "A heat-up is already running."
+    },
+    "laeuft_nicht": {
+      "message": "No heat-up is running."
+    },
+    "nicht_verfuegbar": {
+      "message": "Cannot heat up: {entitaet} is unavailable."
+    },
+    "wiederherstellung": {
+      "message": "The setpoints of the last heat-up are being restored. Please try again in a moment."
+    }
+  }
+}

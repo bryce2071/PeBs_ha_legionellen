@@ -1,0 +1,73 @@
+{
+  "entity": {
+    "binary_sensor": {
+      "laeuft": {
+        "default": "mdi:water-boiler-off",
+        "state": {
+          "on": "mdi:water-boiler"
+        }
+      },
+      "pv_ueberschuss": {
+        "default": "mdi:solar-power-variant-outline",
+        "state": {
+          "on": "mdi:solar-power-variant"
+        }
+      }
+    },
+    "button": {
+      "jetzt_aufheizen": {
+        "default": "mdi:water-thermometer"
+      },
+      "abbrechen": {
+        "default": "mdi:stop-circle-outline"
+      }
+    },
+    "sensor": {
+      "status": {
+        "default": "mdi:bacteria-outline",
+        "state": {
+          "heizt": "mdi:water-boiler",
+          "stoerung": "mdi:alert-circle-outline",
+          "aus": "mdi:pause-circle-outline",
+          "faellig": "mdi:alert-outline",
+          "pv_bereit": "mdi:solar-power-variant-outline",
+          "ok": "mdi:check-circle-outline"
+        }
+      },
+      "letzte_aufheizung": {
+        "default": "mdi:history"
+      },
+      "tage_seit_aufheizung": {
+        "default": "mdi:calendar-clock"
+      },
+      "letzte_zapfung": {
+        "default": "mdi:water-pump"
+      },
+      "tage_ohne_zapfung": {
+        "default": "mdi:water-off-outline"
+      },
+      "naechste_pflicht": {
+        "default": "mdi:calendar-alert"
+      },
+      "letzter_versuch": {
+        "default": "mdi:clipboard-text-clock-outline",
+        "state": {
+          "erfolgreich": "mdi:check-circle-outline",
+          "nicht_gestartet": "mdi:help-circle-outline",
+          "nicht_erreicht": "mdi:thermometer-alert",
+          "zeitlimit": "mdi:timer-alert-outline",
+          "abgebrochen": "mdi:cancel",
+          "fehler": "mdi:alert-circle-outline"
+        }
+      }
+    },
+    "switch": {
+      "automatik": {
+        "default": "mdi:robot-outline",
+        "state": {
+          "off": "mdi:robot-off-outline"
+        }
+      }
+    }
+  }
+}
